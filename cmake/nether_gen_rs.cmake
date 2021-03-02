@@ -35,9 +35,9 @@ ExternalProject_Add(nether_gen_rs
         URL ${libnether_gen_rs_URL}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND
-        cargo --version
+        sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo version"
         BUILD_COMMAND
-        cargo build --release
+        sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo build --release"
         INSTALL_COMMAND
         cmake -E echo "Skipping install step as it was done previously."
         INSTALL_DIR ${libnether_gen_rs_INSTALL}
