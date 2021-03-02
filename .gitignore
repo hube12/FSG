@@ -1,3 +1,5 @@
+# user defined
+cmake/null.c
 
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,c,c++,rust,intellij+all,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,c,c++,rust,intellij+all,linux

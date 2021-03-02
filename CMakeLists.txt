@@ -11,6 +11,11 @@ IF(NOT AUTOCONF)
     message( FATAL_ERROR "Missing autoconf (sudo apt install autoconf) " )
 ENDIF()
 
+find_program(GETTEXT "gettext")
+IF(NOT GETTEXT)
+    message( FATAL_ERROR "Missing gettext (sudo apt install gettext) " )
+ENDIF()
+
 message("You need rust installed and in ~/.bashrc or in $HOME/.cargo/env, libgm, gcc, cmake, make,autoconf")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -48,3 +53,12 @@ message("FSG libs are : " "${FSG_LIBS}")
 add_executable(FSG test.c)
 target_link_libraries(FSG ${FSG_LIBS})
 target_include_directories(FSG PUBLIC ${FSG_INCLUDE_DIRS})
+
+
+
+# Cleaning task
+file(WRITE cmake/null.c "int main() { return 0; }")
+add_executable(Clean cmake/null.c)
+add_custom_command(TARGET Clean POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/clean-all.cmake
+        COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR})
