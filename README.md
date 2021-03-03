@@ -4,7 +4,8 @@
 
 - autoconf
 - gettext
-- rust
+- rustc
+- cargo
 - gcc 
 - cmake
 - make
