@@ -10,10 +10,9 @@ ExternalProject_Add(gcrypt
         PREFIX libgcrypt
         URL ${libgcrypt_URL}
         BUILD_IN_SOURCE 1
-        CONFIGURE_COMMAND
-        "./autogen.sh; ./configure --prefix=<INSTALL_DIR> --enable-static=yes --with-libgpg-error-prefix=${libgpg_error_INSTALL}"
-        BUILD_COMMAND
-        "make -j ${SPEED}"
+        CONFIGURE_COMMAND sh -c "echo run1 && ./autogen.sh  --force && echo done1"
+        COMMAND sh -c "echo run2 && ./configure --prefix=<INSTALL_DIR> --enable-static=yes --with-libgpg-error-prefix=${libgpg_error_INSTALL} && echo done2"
+        BUILD_COMMAND sh -c "make -j${SPEED}"
         INSTALL_COMMAND
         make install
         INSTALL_DIR ${libgcrypt_INSTALL}
@@ -23,4 +22,5 @@ ExternalProject_Add(gcrypt
         LOG_BUILD 1
         )
 
-set(gcrypt_LIBRARIES ${libgcrypt_LIB_DIR}/libgcrypt.a)
+set(gcrypt_STATIC_LIBRARIES ${libgcrypt_LIB_DIR}/libgcrypt.a)
+set(gcrypt_SHARED_LIBRARIES ${libgcrypt_LIB_DIR}/libgcrypt.so)

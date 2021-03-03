@@ -25,4 +25,4 @@ ExternalProject_Add(cubiomes
         LOG_BUILD 1
         )
 
-set(cubiomes_LIBRARIES ${libcubiomes_LIB_DIR}/libcubiomes.a)
+set(cubiomes_STATIC_LIBRARIES ${libcubiomes_LIB_DIR}/libcubiomes.a)

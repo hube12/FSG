@@ -42,7 +42,7 @@ ExternalProject_Add(nether_gen_rs
         sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo build --release"
         INSTALL_COMMAND
         sh -c "mkdir -p ${libnether_gen_rs_INCLUDE_DIR} ${libnether_gen_rs_LIB_DIR}" &&
-        sh -c "cp target/*.h ${libnether_gen_rs_INCLUDE_DIR} && cp target/release/libminecraft_nether_gen_rs.so ${libnether_gen_rs_LIB_DIR}"
+        sh -c "cp target/*.h ${libnether_gen_rs_INCLUDE_DIR} && cp target/release/libminecraft_nether_gen_rs.so target/release/libminecraft_nether_gen_rs.a ${libnether_gen_rs_LIB_DIR}"
         INSTALL_DIR ${libnether_gen_rs_INSTALL}
         LOG_DOWNLOAD 1
         LOG_UPDATE 1
@@ -50,4 +50,5 @@ ExternalProject_Add(nether_gen_rs
         LOG_BUILD 1
         )
 
-set(libnether_gen_rs_LIBRARIES ${libnether_gen_rs_LIB_DIR}/libminecraft_nether_gen_rs.so)
+set(libnether_gen_rs_STATIC_LIBRARIES ${libnether_gen_rs_LIB_DIR}/libminecraft_nether_gen_rs.a)
+set(libnether_gen_rs_SHARED_LIBRARIES ${libnether_gen_rs_LIB_DIR}/libminecraft_nether_gen_rs.so)

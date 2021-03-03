@@ -1,4 +1,4 @@
-#include "include/finders.h"
+#include <finders.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <gcrypt.h>
@@ -471,7 +471,7 @@ int valid_village_and_portal_not_biome(int64_t lower48){
 }
 
 int possible_lava(int64_t lower48, int x, int z){
-    printf("lower48: %ld\n", lower48)
+    printf("lower48: %ld\n", lower48);
     int64_t fakeseed = (lower48) ^ 0x5deece66dUL;
     long a = nextLong(&fakeseed) | 1;
     long b = nextLong(&fakeseed) | 1;
