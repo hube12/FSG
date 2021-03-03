@@ -27,3 +27,6 @@ To remove the build stuff do `rm -rf build`
 
 For an all in one command do `cmake -Bbuild . && cd build && make FSG` (where . is the folder with the CmakeLists.txt)
 
+## Building static executable
+
+./make_static.sh
