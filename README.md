@@ -19,13 +19,11 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```shell
 mkdir build
 cd build
-cmake --build ..
+cmake ..
+make FSG
 ```
 
 To remove the build stuff do `rm -rf build`
 
-For an all in one command do `cmake -Bbuild .` (where . is the folder with the CmakeLists.txt)
-
-
-
+For an all in one command do `cmake -Bbuild . && cd build && make FSG` (where . is the folder with the CmakeLists.txt)
 
