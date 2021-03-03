@@ -13,7 +13,7 @@ ExternalProject_Add(gcrypt
         CONFIGURE_COMMAND
         "./autogen.sh; ./configure --prefix=<INSTALL_DIR> --enable-static=yes --with-libgpg-error-prefix=${libgpg_error_INSTALL}"
         BUILD_COMMAND
-        make -j ${SPEED}
+        "make -j ${SPEED}"
         INSTALL_COMMAND
         make install
         INSTALL_DIR ${libgcrypt_INSTALL}

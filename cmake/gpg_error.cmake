@@ -11,9 +11,9 @@ ExternalProject_Add(gpg_error
         URL ${libgpg_error_URL}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND
-        "./autogen.sh; ./configure --prefix=<INSTALL_DIR> --enable-static=yes"
+        "./autogen.sh;./configure --prefix=<INSTALL_DIR> --enable-static=yes"
         BUILD_COMMAND
-        make -j ${SPEED}
+        "make -j ${SPEED}"
         INSTALL_COMMAND
         make install
         INSTALL_DIR ${libgpg_error_INSTALL}
