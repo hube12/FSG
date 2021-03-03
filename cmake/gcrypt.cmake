@@ -2,6 +2,8 @@ include(ExternalProject)
 
 set(libgcrypt_URL "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.7.tar.bz2")
 set(libgcrypt_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/third_party/libgcrypt")
+set(libgcrypt_LIB_DIR "${libgcrypt_INSTALL}/lib")
+set(libgcrypt_INCLUDE_DIR "${libgcrypt_INSTALL}/include")
 message("Downloading from ${libgcrypt_URL}")
 
 ExternalProject_Add(gcrypt
@@ -9,9 +11,9 @@ ExternalProject_Add(gcrypt
         URL ${libgcrypt_URL}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND
-        ./autogen.sh && ./configure --prefix=<INSTALL_DIR> --enable-static=yes
+        "./autogen.sh; ./configure --prefix=<INSTALL_DIR> --enable-static=yes --with-libgpg-error-prefix=${libgpg_error_INSTALL}"
         BUILD_COMMAND
-        make check
+        make -j ${SPEED}
         INSTALL_COMMAND
         make install
         INSTALL_DIR ${libgcrypt_INSTALL}
@@ -20,3 +22,5 @@ ExternalProject_Add(gcrypt
         LOG_CONFIGURE 1
         LOG_BUILD 1
         )
+
+set(gcrypt_LIBRARIES ${libgcrypt_LIB_DIR}/libgcrypt.a)

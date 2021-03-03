@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(FSG LANGUAGES C)
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 if (!MSVC)
     set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Ofast -ggdb3 -pedantic -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter")
 endif()
+
+if (NOT DEFINED SPEED)
+    set(SPEED 4)
+endif ()
 
 find_program(AUTOCONF "autoconf")
 IF(NOT AUTOCONF)
@@ -26,27 +30,28 @@ include(cubiomes)
 
 
 message("Cubiomes lib is here: ${cubiomes_LIBRARIES}")
-
-
-
-
+message("Gcrypt lib is here: ${gcrypt_LIBRARIES}")
 
 
 add_library(libnether_gen_rs INTERFACE )
 add_dependencies(libnether_gen_rs nether_gen_rs)
 target_include_directories(libnether_gen_rs INTERFACE ${libnether_gen_rs_INCLUDE_DIR})
 
-add_library(libgcrypt INTERFACE )
+add_library(libgcrypt STATIC IMPORTED)
+SET_TARGET_PROPERTIES(libgcrypt PROPERTIES IMPORTED_LOCATION ${gcrypt_LIBRARIES})
 add_dependencies(libgcrypt gcrypt)
-add_dependencies(gcrypt gpg_error)
-target_include_directories(libgcrypt INTERFACE ${libnether_gen_rs_INCLUDE_DIR})
+add_dependencies(gcrypt libgpg_error)
+
+add_library(libgpg_error STATIC IMPORTED)
+SET_TARGET_PROPERTIES(libgpg_error PROPERTIES IMPORTED_LOCATION ${gpg_error_LIBRARIES})
+add_dependencies(libgpg_error gpg_error)
 
 add_library(libcubiomes STATIC IMPORTED)
 SET_TARGET_PROPERTIES(libcubiomes PROPERTIES IMPORTED_LOCATION ${cubiomes_LIBRARIES})
 add_dependencies(libcubiomes cubiomes)
 
-list(APPEND FSG_INCLUDE_DIRS ${libcubiomes_INCLUDE_DIR})
-list(APPEND FSG_LIBS libnether_gen_rs libgcrypt libcubiomes -lm)
+list(APPEND FSG_INCLUDE_DIRS ${libcubiomes_INCLUDE_DIR} ${libgcrypt_INCLUDE_DIR} ${libgpg_error_INCLUDE_DIR})
+list(APPEND FSG_LIBS libnether_gen_rs libgpg_error libgcrypt libcubiomes -lm)
 message("FSG include headers are here : " "${FSG_INCLUDE_DIRS}")
 message("FSG libs are : " "${FSG_LIBS}")
 
@@ -58,7 +63,8 @@ target_include_directories(FSG PUBLIC ${FSG_INCLUDE_DIRS})
 
 # Cleaning task
 file(WRITE cmake/null.c "int main() { return 0; }")
-add_executable(Clean cmake/null.c)
-add_custom_command(TARGET Clean POST_BUILD
+add_executable(CleanAll cmake/null.c)
+add_custom_command(TARGET CleanAll POST_BUILD
+        COMMAND ${CMAKE_BUILD_TOOL} clean
         COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/clean-all.cmake
         COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR})
