@@ -33,9 +33,9 @@ message("Cubiomes lib is here: ${cubiomes_LIBRARIES}")
 message("Gcrypt lib is here: ${gcrypt_LIBRARIES}")
 
 
-add_library(libnether_gen_rs INTERFACE )
+add_library(libnether_gen_rs SHARED IMPORTED)
+SET_TARGET_PROPERTIES(libnether_gen_rs PROPERTIES IMPORTED_LOCATION ${libnether_gen_rs_LIBRARIES})
 add_dependencies(libnether_gen_rs nether_gen_rs)
-target_include_directories(libnether_gen_rs INTERFACE ${libnether_gen_rs_INCLUDE_DIR})
 
 add_library(libgcrypt STATIC IMPORTED)
 SET_TARGET_PROPERTIES(libgcrypt PROPERTIES IMPORTED_LOCATION ${gcrypt_LIBRARIES})
@@ -50,8 +50,8 @@ add_library(libcubiomes STATIC IMPORTED)
 SET_TARGET_PROPERTIES(libcubiomes PROPERTIES IMPORTED_LOCATION ${cubiomes_LIBRARIES})
 add_dependencies(libcubiomes cubiomes)
 
-list(APPEND FSG_INCLUDE_DIRS ${libcubiomes_INCLUDE_DIR} ${libgcrypt_INCLUDE_DIR} ${libgpg_error_INCLUDE_DIR})
-list(APPEND FSG_LIBS libnether_gen_rs libgpg_error libgcrypt libcubiomes -lm)
+list(APPEND FSG_INCLUDE_DIRS ${libcubiomes_INCLUDE_DIR} ${libgcrypt_INCLUDE_DIR} ${libgpg_error_INCLUDE_DIR} ${libnether_gen_rs_INCLUDE_DIR})
+list(APPEND FSG_LIBS libnether_gen_rs libgpg_error libgcrypt libcubiomes libnether_gen_rs -lm)
 message("FSG include headers are here : " "${FSG_INCLUDE_DIRS}")
 message("FSG libs are : " "${FSG_LIBS}")
 

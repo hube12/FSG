@@ -27,6 +27,8 @@ endif ()
 message("Using nether_gen_rs version ${_nether_gen_rs_version}")
 set(libnether_gen_rs_URL "https://github.com/SeedFinding/minecraft_nether_generation_rs/archive/${_nether_gen_rs_version}.zip")
 set(libnether_gen_rs_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/third_party/libnether_gen_rs")
+set(libnether_gen_rs_LIB_DIR "${libnether_gen_rs_INSTALL}/lib")
+set(libnether_gen_rs_INCLUDE_DIR "${libnether_gen_rs_INSTALL}/include")
 message("Downloading from ${libnether_gen_rs_URL}")
 
 
@@ -39,10 +41,13 @@ ExternalProject_Add(nether_gen_rs
         BUILD_COMMAND
         sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo build --release"
         INSTALL_COMMAND
-        cmake -E echo "Skipping install step as it was done previously."
+        sh -c "mkdir -p ${libnether_gen_rs_INCLUDE_DIR} ${libnether_gen_rs_LIB_DIR}" &&
+        sh -c "cp target/*.h ${libnether_gen_rs_INCLUDE_DIR} && cp target/release/libminecraft_nether_gen_rs.so ${libnether_gen_rs_LIB_DIR}"
         INSTALL_DIR ${libnether_gen_rs_INSTALL}
         LOG_DOWNLOAD 1
         LOG_UPDATE 1
         LOG_CONFIGURE 1
         LOG_BUILD 1
         )
+
+set(libnether_gen_rs_LIBRARIES ${libnether_gen_rs_LIB_DIR}/libminecraft_nether_gen_rs.so)
