@@ -8,7 +8,7 @@
 #define DEBUG 0
 #include <string.h>
 #include <time.h>
-#include "./minecraft_nether_gen_rs.h"
+#include <minecraft_nether_gen_rs.h>
 
 void int64ToChar(unsigned char a[], int64_t n) {
     a[0] = (n >> 56) & 0xFF;
