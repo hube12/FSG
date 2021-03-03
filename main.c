@@ -147,7 +147,7 @@ char bastionbiome(uint64_t seed){
     int64_t chunkx = next(&fakeseed, 31) % 23;
     int64_t chunkz = next(&fakeseed, 31) % 23;
     NetherGen* netherGen=create_new_nether(seed);
-    NetherBiomes biome=get_biome(netherGen,chunkx*16,0,chunkz*16);
+    NetherBiomes biome=get_biome_structure(netherGen,chunkx,chunkz);
     if (biome==BasaltDeltas){
         delete(netherGen);
         return 0;
