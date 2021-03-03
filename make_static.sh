@@ -1,9 +1,10 @@
 mkdir include
 mkdir lib
-cmake -Bbuild . && cd build && make FSG
-find cmake-build-debug/third_party/ -name "*.a" -exec cp {} ./lib \;
-find cmake-build-debug/third_party/ -name "*.h" -exec cp {} ./include \;
+cmake -Bbuild . && cd build && make FSG && cd ..
+find build/third_party/ -name "*.a" -exec cp {} ./lib \;
+find build/third_party/ -name "*.h" -exec cp {} ./include \;
 cd lib
+echo "Concatening static libs..."
 ar -M <<EOM
     CREATE libfsg.a
     ADDLIB libminecraft_nether_gen_rs.a
@@ -13,6 +14,9 @@ ar -M <<EOM
     SAVE
     END
 EOM
+echo "Linking it..."
+ranlib libfsg.a
 cd ..
+echo "Building the executable..."
 gcc main.c -I./include -L./lib -lfsg -lm -lpthread -o seed -Wl,--no-as-needed -ldl
-rm -r lib include
+find lib -type f -not -name 'libfsg.a' -delete
