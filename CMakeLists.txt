@@ -4,7 +4,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(VERBOSE ON)
 if (!MSVC)
-    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Ofast -ggdb3 -pedantic -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter")
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-O2 -ggdb3 -pedantic -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter")
 endif()
 
 if (NOT DEFINED SPEED)
