@@ -19,4 +19,6 @@ ranlib libfsg.a
 cd ..
 echo "Building the executable..."
 gcc main.c -I./include -L./lib -lfsg -lm -lpthread -o seed -Wl,--no-as-needed -ldl
+gcc fsg_power_village_looting.c -I./include -L./lib -lfsg -lm -lpthread -o power_seed -Wl,--no-as-needed -ldl
+gcc fsg_power_village_plusplus.c -I./include -L./lib -lfsg -lm -lpthread -o super_seed -Wl,--no-as-needed -ldl
 find lib -type f -not -name 'libfsg.a' -delete

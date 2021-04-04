@@ -72,6 +72,15 @@ add_executable(FSG main.c)
 target_link_libraries(FSG ${FSG_SHARED_LIBS})
 target_include_directories(FSG PUBLIC ${FSG_INCLUDE_DIRS})
 
+add_executable(FSG_POWER fsg_power_village_looting_sword.c)
+target_link_libraries(FSG_POWER ${FSG_SHARED_LIBS})
+target_include_directories(FSG_POWER PUBLIC ${FSG_INCLUDE_DIRS})
+
+add_executable(FSG_SUPER fsg_power_village_plusplus.c)
+target_link_libraries(FSG_SUPER ${FSG_SHARED_LIBS})
+target_include_directories(FSG_SUPER PUBLIC ${FSG_INCLUDE_DIRS})
+
+
 # this will fail royally as libgpg_error doesnt export correctly its symbol and libnether has an issue with dlsym
 
 #list(APPEND FSG_STATIC_LIBS libnether_gen_rs_static libgpg_error_static libgcrypt_static libcubiomes_static -lm -lpthread)

@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <gcrypt.h>
 #define MAXBUFLEN 60000
-#define VERSION 17 //id for the validation
-#define FILTER_TYPE 4// 0=> RSG overworld (Practice Seeds); 1=> village only; 2=> shipwreck only; 3 => jungle only; 4 => coinflip (classic); 5=> whatever I want; 6 => loot testing
+#define VERSION 24 //id for the validation
+#define FILTER_TYPE 1// 0=> RSG overworld (Practice Seeds); 1=> village only; 2=> shipwreck only; 3 => jungle only; 4 => coinflip (classic); 5=> whatever I want; 6 => loot testing
 #define DEBUG 0
+#define MC_VERSION MC_1_16
 #include <string.h>
 #include <time.h>
 #include <minecraft_nether_gen_rs.h>
@@ -314,9 +315,9 @@ int portalBiome(int64_t seed, LayerStack* gp){
     if (isOceanic(biome)){
         return 0;
     }
-/*  if (biome == desert || biome == snowy_tundra){
-    return 0;
-  }*/
+    if (biome == desert || biome == snowy_tundra){
+        return 0;
+    }
     if (!isViableStructurePos(sconf.structType, mc, gp, seed, p.x, p.z)){
         return 0;
     }
@@ -445,10 +446,10 @@ int strongholdSlowCheck(int64_t seed, int fortressQuadrant, LayerStack* gp){
     if (sh_dist > 300*300){
         return 0;
     }
-    /*int shbiome = getBiomeAtPos(gp, best_sh);
-    if (!isOceanic(shbiome)){
-      return 0;
-    }*/
+    int shbiome = getBiomeAtPos(gp, best_sh);
+    if (shbiome != deep_ocean && shbiome != deep_warm_ocean && shbiome != deep_lukewarm_ocean && shbiome != deep_cold_ocean && shbiome != deep_frozen_ocean){
+        return 0;
+    }
     return 1;
 }
 
@@ -591,9 +592,9 @@ int valid_village_and_portal_not_biome(int64_t lower48){
     if (portalTypeNormal(lower48) == 0){ //doing this now biome independent
         return -5;
     }
-    //if (portalLoot(lower48, px, pz) == 0){
-    //  return -777;
-    //}
+    if (portalLoot(lower48, px, pz) == 0){
+        return -777;
+    }
 
     return 1; //has filtered nether for pos/pos bast and 1 fotress + rough stronghold blind + portal location (the L) + village location (square)
 }
@@ -707,9 +708,9 @@ int valid_structures_and_types(int64_t lower48, int* fortressQuadrant, int filte
         if (portalPreLoot(lower48, &px, &pz, &bigsmall, &pType) == 0){
             return 0;
         }
-        //if (portalLoot(lower48, px, pz) == 0){
-        //  return 0;
-        //}
+        if (portalLoot(lower48, px, pz) == 0){
+            return 0;
+        }
         return 1;
     }
 
@@ -742,9 +743,9 @@ int valid_structures_and_types(int64_t lower48, int* fortressQuadrant, int filte
         if (portalTypeNormal(lower48) == 0){ //doing this now biome independent
             return -5;
         }
-        //if (portalLoot(lower48, px, pz) == 0){
-        //  return -777;
-        //}
+        if (portalLoot(lower48, px, pz) == 0){
+            return -777;
+        }
         return valid_shipwreck_and_ravine_not_biome(lower48);
     }
 
@@ -915,9 +916,9 @@ int main () {
     uint64_t NONCE = rand64();
     int seedcounter = 0;
     int64ToChar(iniVector, NONCE);
-    int biome_tolerance = 250;
+    int biome_tolerance = 300;
     char descriptions[5][65] = {"(RSG overworld)", "(Village Only)", "(Shipwreck Only)", "(Jungle Only)", ""};
-    printf("FSG v1.1 %s\n", descriptions[FILTER_TYPE]);
+    printf("FSG v1.2.1 %s\n", descriptions[FILTER_TYPE]);
 
     int filterStyle = FILTER_TYPE;
     if (filterStyle == 4){ //Random village or shipwreck (classic)
@@ -930,10 +931,10 @@ int main () {
         }
     }
     if (filterStyle == 2){
-        biome_tolerance = 500;
+        biome_tolerance = 3000;
     }
     if (filterStyle == 3){ //jungles
-        biome_tolerance = 1000;
+        biome_tolerance = 2000;
     }
     //biome_tolerance is tricky, some lower48s will never be satisfiable so we need a steam valve, but too impatient and
     //the heavily biome dependent filters will need to be extra lucky
@@ -1068,6 +1069,5 @@ int main () {
             }
         }
     }
-    printf("If you're willing to wait for good ruined_portal loot and an ocean-exposed stronghold:\nuse v1.2: https://repl.it/@AndyNovo/ruined-portal-loot \n");
     return 0;
 }
