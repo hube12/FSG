@@ -30,4 +30,6 @@ For an all in one command do `cmake -Bbuild . && cd build && make FSG` (where . 
 
 ## Building static executable
 
-./make_static.sh
+If on wsl, don't forget to run `sudo apt install dos2unix && dos2unix make_static.sh`
+
+`./make_static.sh`
