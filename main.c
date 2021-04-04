@@ -6,6 +6,7 @@
 #define VERSION 17 //id for the validation
 #define FILTER_TYPE 4// 0=> RSG overworld (Practice Seeds); 1=> village only; 2=> shipwreck only; 3 => jungle only; 4 => coinflip (classic); 5=> whatever I want; 6 => loot testing
 #define DEBUG 0
+#define MC_VERSION MC_1_16
 #include <string.h>
 #include <time.h>
 #include <minecraft_nether_gen_rs.h>
@@ -240,7 +241,8 @@ int ravineBiome(int64_t seed, LayerStack* gp){
 int villageLocation(int64_t lower48){
     const StructureConfig sconf = VILLAGE_CONFIG;
     int valid;
-    Pos p = getStructurePos(sconf, lower48, 0, 0, &valid);
+    Pos p;
+    valid = getStructurePos(sconf.structType, MC_VERSION, lower48, 0, 0, &p);
     if (!valid || (p.x < 96 && p.z < 96) || p.x > 144 || p.z > 144 ){
         return 0;
     }
@@ -251,7 +253,8 @@ int villageLocation(int64_t lower48){
 int jungleLocation(int64_t lower48){
     const StructureConfig sconf = JUNGLE_PYRAMID_CONFIG;
     int valid;
-    Pos p = getStructurePos(sconf, lower48, 0, 0, &valid);
+    Pos p;
+    valid = getStructurePos(sconf.structType, MC_VERSION, lower48, 0, 0, &p);
     if (!valid || p.x > 96 || p.z > 96){
         return 0;
     }
@@ -259,9 +262,10 @@ int jungleLocation(int64_t lower48){
 }
 
 int shipwreckLocationAndType(int64_t seed){ //we will presume ocean not beach (test for speed)
-    int valid3;
     const StructureConfig sconf_shipwreck = SHIPWRECK_CONFIG;
-    Pos p3 = getStructurePos(sconf_shipwreck, seed, 0, 0, &valid3);
+    int valid3;
+    Pos p3;
+    valid3 = getStructurePos(sconf_shipwreck.structType, MC_VERSION, seed, 0, 0, &p3);
     if (!valid3 || p3.x >= 96 || p3.z >= 96){
         return 0;
     }
@@ -288,7 +292,8 @@ int shipwreckLocationAndType(int64_t seed){ //we will presume ocean not beach (t
 int portalLocation(int64_t seed, int villageMode, int* px, int* pz){
     const StructureConfig sconf_portal = RUINED_PORTAL_CONFIG;
     int valid2;
-    Pos p2 = getStructurePos(sconf_portal, seed, 0, 0, &valid2);
+    Pos p2;
+    valid2 = getStructurePos(sconf_portal.structType, MC_VERSION, seed, 0, 0, &p2);
     if (villageMode == 1){
         if (!valid2 || p2.x >= 96 || p2.z >= 96){// || p2.x >= 144 || p2.z >= 144){
             return 0;
@@ -308,7 +313,8 @@ int portalLocation(int64_t seed, int villageMode, int* px, int* pz){
 int portalBiome(int64_t seed, LayerStack* gp){
     const StructureConfig sconf = RUINED_PORTAL_CONFIG;
     int valid;
-    Pos p = getStructurePos(sconf, seed, 0, 0, &valid);
+    Pos p;
+    valid = getStructurePos(sconf.structType, MC_VERSION, seed, 0, 0, &p);
     int mc = MC_1_16;
     int biome = getBiomeAtPos(gp, p);
     if (isOceanic(biome)){
@@ -327,7 +333,8 @@ int portalBiome(int64_t seed, LayerStack* gp){
 int portalTypeJungle(int64_t seed){
     const StructureConfig sconf_portal = RUINED_PORTAL_CONFIG;
     int valid2, portalType;
-    Pos p2 = getStructurePos(sconf_portal, seed, 0, 0, &valid2);
+    Pos p2;
+    valid2, portalType = getStructurePos(sconf_portal.structType, MC_VERSION, seed, 0, 0, &p2);
     unsigned long modulus = 1UL << 48;
     int portcx, portcz, portOceanType, portNormalY, portNormalType;
     float buriedFloat, bigOrSmall;
@@ -363,7 +370,8 @@ int portalTypeOcean(int64_t seed){
 int portalTypeNormal(int64_t seed){
     const StructureConfig sconf_portal = RUINED_PORTAL_CONFIG;
     int valid2, portalType;
-    Pos p2 = getStructurePos(sconf_portal, seed, 0, 0, &valid2);
+    Pos p2;
+    valid2, portalType = getStructurePos(sconf_portal.structType, MC_VERSION, seed, 0, 0, &p2);
     int portcx, portcz, portOceanType, portNormalY, portNormalType;
     float buriedFloat, bigOrSmall;
     int rawPortalType;
@@ -661,7 +669,8 @@ int lava_biome(int64_t seed, int x, int z, LayerStack* gp){
 int portalPreLoot(int64_t seed, int* px, int* pz, int* bigsmall, int* pType){
     const StructureConfig sconf_portal = RUINED_PORTAL_CONFIG;
     int valid2;
-    Pos p2 = getStructurePos(sconf_portal, seed, 0, 0, &valid2);
+    Pos p2;
+    valid2 = getStructurePos(sconf_portal.structType, MC_VERSION, seed, 0, 0, &p2);
     if (!valid2){// || p2.x > 32 || p2.z > 32){
         return 0;
     }
@@ -775,7 +784,8 @@ int spawn_medium(int64_t seed, LayerStack* gp){ //for shipwrecks we're ok being 
 int villageBiome(int64_t seed, LayerStack* gp){
     const StructureConfig sconf = VILLAGE_CONFIG;
     int valid;
-    Pos p = getStructurePos(sconf, seed, 0, 0, &valid);
+    Pos p;
+    valid = getStructurePos(sconf.structType, MC_VERSION, seed, 0, 0, &p);
     int mc = MC_1_16;
     if (!isViableStructurePos(sconf.structType, mc, gp, seed, p.x, p.z)){
         return 0;
@@ -791,7 +801,8 @@ int villageBiome(int64_t seed, LayerStack* gp){
 int shipwreckBiome(int64_t seed, LayerStack* gp){
     const StructureConfig sconf_shipwreck = SHIPWRECK_CONFIG;
     int valid3;
-    Pos p3 = getStructurePos(sconf_shipwreck, seed, 0, 0, &valid3);
+    Pos p3;
+    valid3 = getStructurePos(sconf_shipwreck.structType, MC_VERSION, seed, 0, 0, &p3);
     int mc = MC_1_16;
     if (!isOceanic(getBiomeAtPos(gp, p3))){
         return 0;
@@ -805,7 +816,8 @@ int shipwreckBiome(int64_t seed, LayerStack* gp){
 int jungleBiome(int64_t seed, LayerStack* gp){
     const StructureConfig sconf = JUNGLE_PYRAMID_CONFIG;
     int valid;
-    Pos p = getStructurePos(sconf, seed, 0, 0, &valid);
+    Pos p;
+    valid = getStructurePos(sconf.structType, MC_VERSION, seed, 0, 0, &p);
     int mc = MC_1_16;
     if (!isViableStructurePos(sconf.structType, mc, gp, seed, p.x, p.z)){
         return 0;
