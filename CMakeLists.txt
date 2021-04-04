@@ -68,17 +68,23 @@ list(APPEND FSG_SHARED_LIBS libnether_gen_rs_shared libgcrypt_shared libcubiomes
 message("FSG include headers are here : " "${FSG_INCLUDE_DIRS}")
 message("FSG shared libs are : " "${FSG_SHARED_LIBS}")
 
-add_executable(FSG main.c)
-target_link_libraries(FSG ${FSG_SHARED_LIBS})
-target_include_directories(FSG PUBLIC ${FSG_INCLUDE_DIRS})
+list(APPEND EXECUTABLES
+        "main.c"
+        "fsg_power_village_looting_sword.c"
+        "fsg_power_village_plusplus.c"
+        )
 
-add_executable(FSG_POWER fsg_power_village_looting_sword.c)
-target_link_libraries(FSG_POWER ${FSG_SHARED_LIBS})
-target_include_directories(FSG_POWER PUBLIC ${FSG_INCLUDE_DIRS})
+list(APPEND TARGET_NAMES
+        "FSG"
+        "FSG_POWER"
+        "FSG_SUPER"
+        )
 
-add_executable(FSG_SUPER fsg_power_village_plusplus.c)
-target_link_libraries(FSG_SUPER ${FSG_SHARED_LIBS})
-target_include_directories(FSG_SUPER PUBLIC ${FSG_INCLUDE_DIRS})
+foreach(executable target IN ZIP_LISTS EXECUTABLES TARGET_NAMES)
+    add_executable(${target} ${executable})
+    target_link_libraries(${target} ${FSG_SHARED_LIBS})
+    target_include_directories(${target} PUBLIC ${FSG_INCLUDE_DIRS})
+endforeach(executable)
 
 
 # this will fail royally as libgpg_error doesnt export correctly its symbol and libnether has an issue with dlsym
