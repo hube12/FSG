@@ -17,9 +17,17 @@ EOM
 echo "Linking it..."
 ranlib libfsg.a
 cd ..
-echo "Building the executable..."
-mkdir bin
-gcc main.c -I./include -L./lib -lfsg -lm -lpthread -o bin/seed -Wl,--no-as-needed -ldl
-gcc fsg_power_village_looting_sword.c -I./include -L./lib -lfsg -lm -lpthread -o bin/power_seed -Wl,--no-as-needed -ldl
-gcc fsg_power_village_plusplus.c -I./include -L./lib -lfsg -lm -lpthread -o bin/super_seed -Wl,--no-as-needed -ldl
+
+echo "Building the executables..."
+mkdir -p bin
+declare -a source=("main.c" "fsg_power_village_looting_sword.c" "fsg_power_village_plusplus.c")
+declare -a bins=("seed" "power_seed" "super_seed")
+for (( i=0; i<${#source[@]}; i++ ));
+do
+  echo "Building ${bins[i]} from ${source[i]}"
+  gcc "${source[i]}" -I./include -L./lib -lfsg -lm -lpthread -o bin/"${bins[i]}" -Wl,--no-as-needed -ldl
+  strip bin/"${bins[i]}"
+done
+
+echo "Removing the single libs..."
 find lib -type f -not -name 'libfsg.a' -delete
