@@ -1,6 +1,6 @@
-mkdir include
-mkdir lib
-cmake -Bbuild . && cd build && make FSG && cd ..
+mkdir -p include
+mkdir -p lib
+cmake -Bbuild . && cd build && make FSG && cd .. || exit 1
 find build/third_party/ -name "*.a" -exec cp {} ./lib \;
 find build/third_party/ -name "*.h" -exec cp {} ./include \;
 cd lib
@@ -27,7 +27,7 @@ do
   echo "Building ${bins[i]} from ${source[i]}"
   gcc "${source[i]}" -I./include -L./lib -lfsg -lm -lpthread -o bin/"${bins[i]}" -Wl,--no-as-needed -ldl
   strip bin/"${bins[i]}"
-done
+done;
 
 echo "Removing the single libs..."
 find lib -type f -not -name 'libfsg.a' -delete
