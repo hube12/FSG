@@ -3,98 +3,48 @@ project(FSG LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(VERBOSE ON)
+set(CMAKE_BUILD_TYPE "Release")
 if (!MSVC)
     set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-O2 -ggdb3 -pedantic -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter")
 endif()
 
-if (NOT DEFINED SPEED)
-    set(SPEED 4)
-endif ()
+## VERY IMPORTANT
+set(CMAKE_C_FLAGS "-L${CMAKE_SOURCE_DIR}/lib -I${CMAKE_SOURCE_DIR}/include -lm -lpthread -lws2_32 -luserenv -lfsg")
+set(CMAKE_SHARED_LINKER_FLAGS "-lws2_32 -luserenv")
 
-find_program(AUTOCONF "autoconf")
-IF(NOT AUTOCONF)
-    message( FATAL_ERROR "Missing autoconf (sudo apt install autoconf) " )
-ENDIF()
+set(lib_dir ${CMAKE_SOURCE_DIR}/lib)
+set(lib_fsg ${lib_dir}/libfsg.a)
 
-find_program(GETTEXT "gettext")
-IF(NOT GETTEXT)
-    message( FATAL_ERROR "Missing gettext (sudo apt install gettext) " )
-ENDIF()
+message("Lib FSG : ${lib_fsg}")
 
-message("You need rust installed and in ~/.bashrc or in $HOME/.cargo/env, libgm, gcc, cmake, make,autoconf")
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(nether_gen_rs)
-include(gpg_error)
-include(gcrypt)
-include(cubiomes)
+add_library(lib_fsg_static STATIC IMPORTED)
+set_target_properties(lib_fsg_static PROPERTIES IMPORTED_LOCATION ${lib_fsg})
+set_target_properties(lib_fsg_static PROPERTIES LINK_FLAGS "-lws2_32 -luserenv")
 
 
-message("Nether_gen_rs static lib is here: ${libnether_gen_rs_STATIC_LIBRARIES}")
-message("Cubiomes static lib is here: ${cubiomes_STATIC_LIBRARIES}")
-message("Gcrypt static lib is here: ${gcrypt_STATIC_LIBRARIES}")
-message("Gpg error static lib is here: ${gpg_error_STATIC_LIBRARIES}")
-
-
-add_library(libnether_gen_rs_shared SHARED IMPORTED)
-SET_TARGET_PROPERTIES(libnether_gen_rs_shared PROPERTIES IMPORTED_LOCATION ${libnether_gen_rs_SHARED_LIBRARIES})
-add_dependencies(libnether_gen_rs_shared nether_gen_rs)
-
-add_library(libgcrypt_shared SHARED IMPORTED) # this is linked statically to libgpg_error
-SET_TARGET_PROPERTIES(libgcrypt_shared PROPERTIES IMPORTED_LOCATION ${gcrypt_SHARED_LIBRARIES})
-add_dependencies(libgcrypt_shared gcrypt)
-add_dependencies(gcrypt gpg_error)
-
-
-add_library(libnether_gen_rs_static STATIC IMPORTED)
-SET_TARGET_PROPERTIES(libnether_gen_rs_static PROPERTIES IMPORTED_LOCATION ${libnether_gen_rs_STATIC_LIBRARIES})
-add_dependencies(libnether_gen_rs_static nether_gen_rs)
-
-add_library(libgcrypt_static STATIC IMPORTED)
-SET_TARGET_PROPERTIES(libgcrypt_static PROPERTIES IMPORTED_LOCATION ${gcrypt_STATIC_LIBRARIES})
-add_dependencies(libgcrypt_static gcrypt)
-add_dependencies(gcrypt libgpg_error_static)
-
-add_library(libgpg_error_static STATIC IMPORTED)
-SET_TARGET_PROPERTIES(libgpg_error_static PROPERTIES IMPORTED_LOCATION ${gpg_error_STATIC_LIBRARIES})
-add_dependencies(libgpg_error_static gpg_error)
-
-add_library(libcubiomes_static STATIC IMPORTED)
-SET_TARGET_PROPERTIES(libcubiomes_static PROPERTIES IMPORTED_LOCATION ${cubiomes_STATIC_LIBRARIES})
-add_dependencies(libcubiomes_static cubiomes)
-
-list(APPEND FSG_INCLUDE_DIRS ${libcubiomes_INCLUDE_DIR} ${libgcrypt_INCLUDE_DIR} ${libgpg_error_INCLUDE_DIR} ${libnether_gen_rs_INCLUDE_DIR})
-list(APPEND FSG_SHARED_LIBS libnether_gen_rs_shared libgcrypt_shared libcubiomes_static -lm -lpthread)
+list(APPEND FSG_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/include)
 message("FSG include headers are here : " "${FSG_INCLUDE_DIRS}")
-message("FSG shared libs are : " "${FSG_SHARED_LIBS}")
 
 list(APPEND EXECUTABLES
         "main.c"
         "fsg_power_village_looting_sword.c"
         "fsg_power_village_plusplus.c"
+        "carrots_want_to_go_to_the_party_4.c"
         )
 
 list(APPEND TARGET_NAMES
         "FSG"
         "FSG_POWER"
         "FSG_SUPER"
+        "FSG_CARROT"
         )
 
 foreach(executable target IN ZIP_LISTS EXECUTABLES TARGET_NAMES)
     add_executable(${target} ${executable})
-    target_link_libraries(${target} ${FSG_SHARED_LIBS})
-    target_include_directories(${target} PUBLIC ${FSG_INCLUDE_DIRS})
+#    target_link_libraries(${target} ${lib_fsg_static})
+#    target_include_directories(${target} PUBLIC ${FSG_INCLUDE_DIRS})
 endforeach(executable)
 
-
-# this will fail royally as libgpg_error doesnt export correctly its symbol and libnether has an issue with dlsym
-
-#list(APPEND FSG_STATIC_LIBS libnether_gen_rs_static libgpg_error_static libgcrypt_static libcubiomes_static -lm -lpthread)
-#message("FSG static libs are : " "${FSG_SHARED_LIBS}")
-#
-#add_executable(FSG_STATIC main.c)
-#target_link_libraries(FSG_STATIC ${FSG_STATIC_LIBS})
-#target_include_directories(FSG_STATIC PUBLIC ${FSG_INCLUDE_DIRS})
 
 
 

@@ -14,10 +14,9 @@ ExternalProject_Add(cubiomes
         CONFIGURE_COMMAND
         cmake -E echo "no configuration ${DOWNLOAD_DIR}"
         BUILD_COMMAND
-        make libcubiomes
+        cmake -E echo "no configuration ${DOWNLOAD_DIR}"
         INSTALL_COMMAND
-        sh -c "mkdir -p ${libcubiomes_INCLUDE_DIR} ${libcubiomes_LIB_DIR}" &&
-        sh -c "cp *.h ${libcubiomes_INCLUDE_DIR} && cp libcubiomes.a ${libcubiomes_LIB_DIR}"
+        cmake -E echo "no configuration ${DOWNLOAD_DIR}"
         INSTALL_DIR ${libcubiomes_INSTALL}
         LOG_DOWNLOAD 1
         LOG_UPDATE 1

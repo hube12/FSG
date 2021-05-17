@@ -25,7 +25,7 @@ declare -a bins=("seed" "power_seed" "super_seed")
 for (( i=0; i<${#source[@]}; i++ ));
 do
   echo "Building ${bins[i]} from ${source[i]}"
-  gcc "${source[i]}" -I./include -L./lib -lfsg -lm -lpthread -o bin/"${bins[i]}" -Wl,--no-as-needed -ldl
+  gcc main.c -I./include -L./lib -lfsg -lm -lpthread -o bin/seed -Wl,--no-as-needed -ldl
   strip bin/"${bins[i]}"
 done;
 

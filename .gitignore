@@ -1,10 +1,8 @@
 # user defined
 cmake/null.c
 build
-lib
-include
 seed
-
+temp
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,c,c++,rust,intellij+all,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,c,c++,rust,intellij+all,linux
 
@@ -40,7 +38,6 @@ seed
 *.dylib
 
 # Executables
-*.exe
 *.out
 *.app
 *.i*86
@@ -217,4 +214,4 @@ modules.xml
 Cargo.lock
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c,c++,rust,intellij+all,linux
-bin/
+

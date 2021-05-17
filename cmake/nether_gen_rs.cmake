@@ -37,12 +37,11 @@ ExternalProject_Add(nether_gen_rs
         URL ${libnether_gen_rs_URL}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND
-        sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo version"
+        cargo version
         BUILD_COMMAND
-        sh -c ". ~/.bashrc && . $HOME/.cargo/env && cargo build --release"
+        cargo build --release
         INSTALL_COMMAND
-        sh -c "mkdir -p ${libnether_gen_rs_INCLUDE_DIR} ${libnether_gen_rs_LIB_DIR}" &&
-        sh -c "cp target/*.h ${libnether_gen_rs_INCLUDE_DIR} && cp target/release/libminecraft_nether_gen_rs.so target/release/libminecraft_nether_gen_rs.a ${libnether_gen_rs_LIB_DIR}"
+        cargo build --release
         INSTALL_DIR ${libnether_gen_rs_INSTALL}
         LOG_DOWNLOAD 1
         LOG_UPDATE 1
