@@ -42,10 +42,10 @@
 #else
 # include <sys/socket.h>
 # include <sys/time.h>
-#
+# include <sys/select.h>
 #endif /*!_WIN32*/
 
-typedef int gcry_socklen_t;
+typedef socklen_t gcry_socklen_t;
 
 /* This is required for error code compatibility. */
 #define _GCRY_ERR_SOURCE_DEFAULT GPG_ERR_SOURCE_GCRYPT

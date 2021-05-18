@@ -57,7 +57,7 @@ make install
 cd ..
 # Gcrypt
 wget https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.7.tar.bz2
-tar -xvjf libgcrypt-1.8.7.tar.tar.bz2
+tar -xvjf libgcrypt-1.8.7.tar.bz2
 cd libgcrypt-1.8.7
 ./autogen.sh --force
 ./configure --prefix=$PWD/lib --enable-static=yes --with-libgpg-error-prefix=$PWD/../libgpg-error-1.41/lib
@@ -96,10 +96,10 @@ EOM
 echo "Linking it..."
 ranlib libfsg.a
 
-gcc main.c -I./include -L./lib -lfsg -lm -o bin/FSG -Wl,--no-as-needed -lws2_32 -luserenv
-gcc fsg_power_village_looting_sword.c -I./include -L./lib -lfsg -lm -o bin/FSG_POWER -Wl,--no-as-needed -lws2_32 -luserenv
-gcc fsg_power_village_plusplus.c -I./include -L./lib -lfsg -lm -o bin/FSG_SUPER -Wl,--no-as-needed -lws2_32 -luserenv
-gcc carrots_want_to_go_to_the_party_4.c -I./include -L./lib -lfsg -lm -o bin/FSG_CARROT -Wl,--no-as-needed -lws2_32 -luserenv
+gcc main.c -I./include -L./lib -lfsg -lm -o bin/FSG -Wl,--no-as-needed -lws2_32 -luserenv -static
+gcc fsg_power_village_looting_sword.c -I./include -L./lib -lfsg -lm -o bin/FSG_POWER -Wl,--no-as-needed -lws2_32 -luserenv  -static
+gcc fsg_power_village_plusplus.c -I./include -L./lib -lfsg -lm -o bin/FSG_SUPER -Wl,--no-as-needed -lws2_32 -luserenv -static
+gcc carrots_want_to_go_to_the_party_4.c -I./include -L./lib -lfsg -lm -o bin/FSG_CARROT -Wl,--no-as-needed -lws2_32 -luserenv -static
 
 
 ```
